@@ -131,7 +131,7 @@ type InvalidMessageCallback func(ctx context.Context, msg InvalidMessage, err er
 type InvalidMessage struct {
 	ID       string
 	Metadata json.RawMessage
-	Payload  json.RawMessage
+	Payload  []byte
 }
 
 // Consumer is the preconfigured subscriber of the write input messages
@@ -529,7 +529,7 @@ func (c *Consumer) consumeMessages(ctx context.Context, query *query.Builder) ([
 
 type pgMessage struct {
 	ID          pgtype.UUID
-	Payload     pgtype.JSONB
+	Payload     pgtype.Bytea
 	Metadata    pgtype.JSONB
 	Attempt     pgtype.Int4
 	LockedUntil pgtype.Timestamptz
@@ -648,7 +648,6 @@ func (c *Consumer) logFields(msg pgMessage, err error) []any {
 	if err != nil {
 		entry = append(entry, []any{
 			"error", err,
-			"msg.payload", json.RawMessage(msg.Payload.Bytes),
 		})
 	}
 	return entry
@@ -693,12 +692,9 @@ func (c *Consumer) finishParsing(pgMsg pgMessage) (*MessageIncoming, error) {
 	return msg, nil
 }
 
-func parsePayload(pgMsg pgMessage) (json.RawMessage, error) {
+func parsePayload(pgMsg pgMessage) ([]byte, error) {
 	if pgMsg.Payload.Status != pgtype.Present {
 		return nil, errors.New("missing message payload")
-	}
-	if !isJSONObject(pgMsg.Payload.Bytes) {
-		return nil, errors.New("payload is invalid JSON object")
 	}
 	return pgMsg.Payload.Bytes, nil
 }

@@ -1,4 +1,4 @@
-module github.com/joschi/pgq
+module github.com/malonaz/pgq
 
 go 1.24.0
 

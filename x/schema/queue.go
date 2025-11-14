@@ -20,7 +20,7 @@ func GenerateCreateTableQuery(queueName string) string {
 		processed_at   TIMESTAMPTZ                           NULL,
 		consumed_count INTEGER     DEFAULT 0                 NOT NULL,
 		error_detail   TEXT                                  NULL,
-		payload        JSONB                                 NOT NULL,
+		payload        BYTEA                                 NOT NULL,
 		metadata       JSONB                                 NOT NULL
 	);
 	CREATE INDEX IF NOT EXISTS "%[2]s_created_at_idx" ON %[1]s (created_at);

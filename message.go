@@ -2,7 +2,6 @@ package pgq
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -41,7 +40,7 @@ func init() {
 }
 
 // NewMessage creates new message that satisfies Message interface.
-func NewMessage(meta Metadata, payload json.RawMessage, attempt int, maxConsumedCount uint) *MessageIncoming {
+func NewMessage(meta Metadata, payload []byte, attempt int, maxConsumedCount uint) *MessageIncoming {
 	return &MessageIncoming{
 		Metadata:         meta,
 		Payload:          payload,
@@ -56,7 +55,7 @@ type MessageOutgoing struct {
 	// messages gets processed immediately.
 	ScheduledFor *time.Time `db:"scheduled_for"`
 	// Payload is the message's Payload.
-	Payload json.RawMessage `db:"payload"`
+	Payload []byte `db:"payload"`
 	// Metadata contains the message Metadata.
 	Metadata Metadata `db:"metadata"`
 }
@@ -68,7 +67,7 @@ type MessageIncoming struct {
 	// Metadata contains the message Metadata.
 	Metadata Metadata
 	// Payload is the message's Payload.
-	Payload json.RawMessage
+	Payload []byte
 	// Attempt number, counts from 1. It is incremented every time the message is
 	// consumed.
 	Attempt int
