@@ -1,6 +1,7 @@
 package pgq
 
 import (
+	"fmt"
 	"context"
 	stderrors "errors"
 	"maps"
@@ -185,6 +186,7 @@ func buildInsertQuery(queue string, msgCount int) string {
 		sb.WriteString(")")
 	}
 	sb.WriteString(` RETURNING "id"`)
+	fmt.Println(sb.String())
 	return sb.String()
 }
 
