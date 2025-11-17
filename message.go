@@ -86,6 +86,9 @@ type MessageIncoming struct {
 	updateLockedUntilFn func(context.Context, time.Time) error
 }
 
+func (m *MessageIncoming) GetID() string {
+	return m.id.String()
+}
 // LastAttempt returns true if the message is consumed for the last time
 // according to maxConsumedCount settings. If the Consumer is not configured to
 // limit the number of attempts setting WithMaxConsumeCount to zero, it always
